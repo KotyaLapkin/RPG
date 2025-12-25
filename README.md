@@ -1,8 +1,8 @@
 # Лабораторная работа №1
 ![](zxc.png)
 # Лабораторная работа №2
-###
 
+## Создание таблиц
 ``` sql
 CREATE TABLE "Emelyanov2271"."Player" (
     player_id INT PRIMARY KEY NOT NULL,
@@ -47,6 +47,7 @@ CREATE TABLE "Emelyanov2271"."Character_stat"(
   value INT NOT NULL
 );
 ```
+## Добавление данных в таблицы
 ``` sql
 INSERT INTO "Emelyanov2271"."Player"
 (player_id, "name", nickname, email, registered_date) 
@@ -115,6 +116,7 @@ VALUES  (2, 0, 18),
 	(2, 2, 8),
 	(2, 3, 16);
 ```
+## Запрос, возвращаюший основные данные о персонажах игроков
 ``` sql
 SELECT 
   "Emelyanov2271"."Player".nickname,
@@ -135,6 +137,12 @@ INNER JOIN "Emelyanov2271"."Class_catalog"
 ```
  
 # Лабораторная работа №3
+## Создание представления, состоящго из Сессий и персонажей, созданных на них. 
+ Благодаря 
+ ```sql 
+ MAX(CASE WHEN ...) 
+ ```
+В результате мы получаем строки таблицы и "превращаем" их в столбцы. 
 ```sql
 CREATE VIEW "Emelyanov2271".Session_Chars AS
 	SELECT 
@@ -163,7 +171,7 @@ CREATE VIEW "Emelyanov2271".Session_Chars AS
 		"Emelyanov2271"."Class_catalog".name_class
 	ORDER BY "Emelyanov2271"."Session".name ASC
 ```
-
+## Процедура, не использующая функцию
 ```sql
 CREATE OR REPLACE PROCEDURE "Emelyanov2271".get_session_char(
     IN session_name_filter VARCHAR DEFAULT NULL,
@@ -204,7 +212,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 ```
-
+## Функция и процедура, использующая ее
 ```sql
 CREATE OR REPLACE FUNCTION "Emelyanov2271".stat_up(
     stat_name VARCHAR,
@@ -347,6 +355,8 @@ JOIN "Emelyanov2271"."Character" Ch ON P.player_id = Ch.player_id
 JOIN "Emelyanov2271"."Class_catalog" Cc ON Ch.class_id = Cc.class_id
 WHERE P.registered_date > DATE '2025-07-01' AND Ch.level < 29;
 ```
+## Данные анализа с использованием индексов
+![](rezanalyze)
 
 # Лабораторная работа №5
 ```sql
@@ -359,7 +369,8 @@ CREATE TABLE IF NOT EXISTS "Emelyanov2271"."AuditLog" (
     new_data JSONB
 )
 ```
-
+## Тригерная функция, принимающая результат запроса и изменяющая таблицы в зависимости от него. Добавляет информацию о запросе в таблицу AuditLog.
+При удалении "Player" так же удаляется "Character" по "palyer_id", и "Character_stat" по "character_id".
 ```sql
 CREATE OR REPLACE FUNCTION "Emelyanov2271".log_player_changes()
 RETURNS TRIGGER AS $$
@@ -460,7 +471,7 @@ CREATE TRIGGER character_stat_audit_trigger
 BEFORE INSERT OR UPDATE OR DELETE ON "Emelyanov2271"."Character_stat"
 FOR EACH ROW EXECUTE FUNCTION "Emelyanov2271".log_player_changes();
 ```
-
+## Примеры операция с таблицами
 ```sql
 INSERT INTO "Emelyanov2271"."Player" (player_id, name, nickname, email, registered_date)
 VALUES (20121, 'asd', 'ivan', 'ivan@gmail.com', '2025-12-25')
