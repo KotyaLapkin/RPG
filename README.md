@@ -356,7 +356,7 @@ JOIN "Emelyanov2271"."Class_catalog" Cc ON Ch.class_id = Cc.class_id
 WHERE P.registered_date > DATE '2025-07-01' AND Ch.level < 29;
 ```
 ## Данные анализа с использованием индексов
-![](rezanalyze)
+![](rezanalyze.png)
 
 # Лабораторная работа №5
 ```sql
